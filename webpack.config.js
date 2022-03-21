@@ -1,7 +1,19 @@
 const path = require('path')
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/index.ts',
+  module: {
+    rules: [
+      {// .ts で終わるファイルに対して、ts-loader を実行する
+        test: /\.ts$/,
+        use: 'ts-loader',
+        exclude: /node_modules/, // exclude（含まない）は除外するファイルを正規表現で指定
+      },
+    ],
+  },
+  resolve: {
+    extensions: ['.ts'], // resolve セクションは、モジュールとして解決するファイルの拡張子を指定します。
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'index.js',
