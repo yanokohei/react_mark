@@ -1,18 +1,18 @@
 const path = require('path')
 
 module.exports = {
-  entry: './src/index.ts',
+  entry: './src/index.tsx',
   module: {
     rules: [
       {// .ts で終わるファイルに対して、ts-loader を実行する
-        test: /\.ts$/,
+        test: /\.tsx?$/, // x? =「x の有無は任意」という正規表現。つまり .ts .tsx のどちらも適用される
         use: 'ts-loader',
         exclude: /node_modules/, // exclude（含まない）は除外するファイルを正規表現で指定
       },
     ],
   },
-  resolve: {
-    extensions: ['.ts'], // resolve セクションは、モジュールとして解決するファイルの拡張子を指定します。
+  resolve: { //外部ファイルやライブラリ（node_modules 以下のファイル）を使うファイルの拡張子なので .tsx と .js の両方を指定します。
+    extensions: ['.js', '.ts', '.tsx'], // resolve セクションは、モジュールとして解決するファイルの拡張子を指定します。
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -30,3 +30,6 @@ module.exports = {
 // ファイル名 index.js で出力します。
 // また、変換する際は JavaScript 内に書かれている相対パスのリソースへ自動的に dist / を追加してくれます。
 // （publicPath はちょっとややこしいので、ここは一旦そういうものなのだ、というぐらいの認識で大丈夫です）
+
+// React は JSX という独自の構文を使いビューを定義します。
+// その際は.tsx というファイル拡張子を使います。
