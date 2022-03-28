@@ -43,3 +43,41 @@ HTML の中に JavaScript が書かれていて、見た目と動作が同じ場
 ## Reactの特徴2.コンポーネントベース
 React は 「仮想DOM」というDOMの状態を擬似的に表現したデータを持っています。
 画面の変更が発生するたびに「仮想DOM」を作って差分を検知し、その差分だけを実DOMに反映しています。
+
+コンポーネントとはビューとJavaScriptをひとまとめにした部品で、それらを組み合わせることでUIを構築します。再利用も可能です。
+
+```jsx
+ const KoyanoView = () => {
+   return (
+     <div>
+       <p>子コンポーネントです。</p>
+     </div>
+   )
+ }
+```
+```jsx
+ const OyanoView = () => {
+   return (
+     <div>
+       <h1>親コンポーネントです。</h1>
+       <Koyano />
+     </div>
+   )
+ }
+```
+上記はOyanoでKoyanoを呼び出しています。
+Action：入力内容を元にデータを作成
+Dispatcher：データを送る（EventEmitter）
+Store：データを貯める
+View：データを表示する
+
+## Reactの特徴3.状態管理
+React は「状態」によって画面が決まります。
+<src="https://user-images.githubusercontent.com/78721963/160485321-291927be-0039-4a57-9c13-4c292b3001fe.png">
+
+１.状態に応じた画面が作られる
+２.ボタンのクリックなどによってイベントが発生する(Actionでデータを作成、Dispatcherでデータを送る)
+３.イベントに応じて状態が更新される(Storeで管理される)
+４.更新されたデータをもとに画面が表示される
+
+参考:https://qiita.com/syossan27/items/7e1b2e07ac68b96bdaa7
