@@ -1,12 +1,21 @@
 import * as React from 'react'
 import { render } from 'react-dom'
 import styled from 'styled-components' // JavaScript の中でスタイリングを管理でき、比較的導入が容易で名前の衝突がしにくい
+import { createGlobalStyle } from 'styled-components'
+import { Editor } from './pages/editor'
 
-const Header = styled.h1`
-  color: red;
-`
+const GlobalStyle = createGlobalStyle`
+  body * {
+    box-sizing: border-box;
+  }
+` // styled-componentでインポートしたcreateGlobalStyleでページ全体に適用するCSSを定義
 
-const Main = (<Header>Markdown Editor</Header>)
+const Main = (
+  <>
+    <GlobalStyle />
+    <Editor />
+  </>
+)
 
 render(Main, document.getElementById('app'))
 
