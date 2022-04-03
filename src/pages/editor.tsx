@@ -1,7 +1,8 @@
 import * as React from 'react'
 import styled from 'styled-components'
+import { useStateWithStorage } from '../hooks/use_state_with_storage'
 
-const { useState } = React   // ReactからuseStateを取り出す (オブジェクトの分割代入は任意のプロパティを変数に代入する)
+const { useState } = React
 const StorageKey = 'pages/editor:text' // データの参照・保存に使うキー名を任意の名前で定義しています。
                                        // https://i.gyazo.com/a854a783ca0198fbf0c8744e115a6dec.png
 const Header = styled.header`
@@ -48,8 +49,7 @@ const Preview = styled.div`
 // Editorコンポーネントを以下のように定義するとJSXで<Editor> という形式で呼び出すことができる。
 export const Editor: React.FC = () => { // React.FC は 関数コンポーネント（Function Component）の略
                   // Reactのコンポーネントを返すという型アノテーション
-  const [text, setText] = useState<string>(localStorage.getItem(StorageKey)|| '') // 関数コンポーネント内で状態を定義
-                          // keyで保管している値を取り出すかfalseの場合は空文字を初期値とする
+  const [text, setText] = useStateWithStorage('', StorageKey)
   return (
     <>
       <Header>
@@ -57,12 +57,8 @@ export const Editor: React.FC = () => { // React.FC は 関数コンポーネン
       </Header>
       <Wrapper>
         <TextArea
-          onChange={(event) => {       // onChange属性には、テキストの内容が変更された時に実行される関数を渡します。
-            const changedText = event.target.value
-            localStorage.setItem(StorageKey, changedText) // 第一引数に任意のkey名、第二引数に保管したい値
-            setText(changedText) // changedTextにテキストの内容が格納されています。
-          }}                            //setTextにテキストを渡すことで状態を更新します。
-          value = {text}                // useStateで管理している変数を渡します。
+          onChange={(event) => { setText(event.target.value) }} // setTextにテキストを渡すことで状態を更新します。
+          value = {text} // useStateで管理している変数を渡します。これがないとリロードでブラウザ上の入力が消えてしまう
         />
         <Preview>プレビューエリア</Preview>
       </Wrapper>
