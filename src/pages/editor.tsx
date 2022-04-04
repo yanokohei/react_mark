@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { useStateWithStorage } from '../hooks/use_state_with_storage'
+import * as ReactMarkdown from 'react-markdown'
 
 const { useState } = React
 const StorageKey = 'pages/editor:text' // データの参照・保存に使うキー名を任意の名前で定義しています。
@@ -60,7 +61,9 @@ export const Editor: React.FC = () => { // React.FC は 関数コンポーネン
           onChange={(event) => { setText(event.target.value) }} // setTextにテキストを渡すことで状態を更新します。
           value = {text} // useStateで管理している変数を渡します。これがないとリロードでブラウザ上の入力が消えてしまう
         />
-        <Preview>プレビューエリア</Preview>
+        <Preview>
+          <ReactMarkdown>{text}</ReactMarkdown>
+        </Preview>
       </Wrapper>
     </>
   )
