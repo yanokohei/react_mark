@@ -1,11 +1,11 @@
-import * as React from 'react'
-import styled from 'styled-components'
-import { useStateWithStorage } from '../hooks/use_state_with_storage'
-import * as ReactMarkdown from 'react-markdown'
+import * as React from "react";
+import styled from "styled-components";
+import { useStateWithStorage } from "../hooks/use_state_with_storage";
+import * as ReactMarkdown from "react-markdown";
 
-const { useState } = React
-const StorageKey = 'pages/editor:text' // データの参照・保存に使うキー名を任意の名前で定義しています。
-                                       // https://i.gyazo.com/a854a783ca0198fbf0c8744e115a6dec.png
+const { useState } = React;
+const StorageKey = "pages/editor:text"; // データの参照・保存に使うキー名を任意の名前で定義しています。
+// https://i.gyazo.com/a854a783ca0198fbf0c8744e115a6dec.png
 const Header = styled.header`
   font-size: 1.5rem;
   height: 2rem;
@@ -15,7 +15,7 @@ const Header = styled.header`
   position: fixed;
   right: 0;
   top: 0;
-`
+`;
 
 const Wrapper = styled.div`
   bottom: 0;
@@ -23,7 +23,7 @@ const Wrapper = styled.div`
   position: fixed;
   right: 0;
   top: 3rem;
-`
+`;
 
 const TextArea = styled.textarea`
   border-right: 1px solid silver;
@@ -35,7 +35,7 @@ const TextArea = styled.textarea`
   position: absolute;
   top: 0;
   width: 50vw;
-`
+`;
 
 const Preview = styled.div`
   border-top: 1px solid silver;
@@ -46,28 +46,29 @@ const Preview = styled.div`
   right: 0;
   top: 0;
   width: 50vw;
-`
+`;
 // Editorコンポーネントを以下のように定義するとJSXで<Editor> という形式で呼び出すことができる。
-export const Editor: React.FC = () => { // React.FC は 関数コンポーネント（Function Component）の略
-                  // Reactのコンポーネントを返すという型アノテーション
-  const [text, setText] = useStateWithStorage('', StorageKey)
+export const Editor: React.FC = () => {
+  // React.FC は 関数コンポーネント（Function Component）の略
+  // Reactのコンポーネントを返すという型アノテーション
+  const [text, setText] = useStateWithStorage("", StorageKey);
   return (
     <>
-      <Header>
-        Markdown Editor
-      </Header>
+      <Header>Markdown Editor</Header>
       <Wrapper>
         <TextArea
-          onChange={(event) => { setText(event.target.value) }} // setTextにテキストを渡すことで状態を更新します。
-          value = {text} // useStateで管理している変数を渡します。これがないとリロードでブラウザ上の入力が消えてしまう
+          onChange={(event) => {
+            setText(event.target.value);
+          }} // setTextにテキストを渡すことで状態を更新します。
+          value={text} // useStateで管理している変数を渡します。これがないとリロードでブラウザ上の入力が消えてしまう
         />
         <Preview>
           <ReactMarkdown>{text}</ReactMarkdown>
         </Preview>
       </Wrapper>
     </>
-  )
-}
+  );
+};
 // pageであるEditorを定義します。関数コンポーネントの型アノテーションをつけます。
 // 関数のブロック内にreturnと()、その中に<>という描画されない空タグを書きます。<React.Fragment>の短縮記法です。
 // <>を使うとDOMに余分なノードを追加することなく子要素をまとめることができるようになります。
