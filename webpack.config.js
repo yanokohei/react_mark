@@ -1,30 +1,32 @@
-const path = require('path')
+const path = require("path");
 
 module.exports = {
-  entry: './src/index.tsx',
+  entry: "./src/index.tsx",
   module: {
     rules: [
-      {// .ts で終わるファイルに対して、ts-loader を実行する
+      {
+        // .ts で終わるファイルに対して、ts-loader を実行する
         test: /\.tsx?$/, // x? =「x の有無は任意」という正規表現。つまり .ts .tsx のどちらも適用される
-        use: 'ts-loader',
+        use: "ts-loader",
         exclude: /node_modules/, // exclude（含まない）は除外するファイルを正規表現で指定
       },
     ],
   },
-  resolve: { //外部ファイルやライブラリ（node_modules 以下のファイル）を使うファイルの拡張子なので .tsx と .js の両方を指定します。
-    extensions: ['.js', '.ts', '.tsx'], // resolve セクションは、モジュールとして解決するファイルの拡張子を指定します。
+  resolve: {
+    //外部ファイルやライブラリ（node_modules 以下のファイル）を使うファイルの拡張子なので .tsx と .js の両方を指定します。
+    extensions: [".js", ".ts", ".tsx"], // resolve セクションは、モジュールとして解決するファイルの拡張子を指定します。
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'index.js',
-    publicPath: 'dist/',
+    path: path.resolve(__dirname, "dist"),
+    filename: "index.js",
+    publicPath: "dist/",
   },
   devServer: {
-    publicPath: '/dist/', // ビルドしたファイルにアクセスするためのパス
+    publicPath: "/dist/", // ビルドしたファイルにアクセスするためのパス
     hot: true, // ファイルを変更すると自動的にブラウザに反映させるフラグ
     open: true, // 起動時にブラウザで開くフラグ (Google Chrome以外の場合は不要)
-  }
-}
+  },
+};
 
 // entry セクションは、最初に読み込むファイルを指定します。
 // ここで指定されたファイルから別のファイルを読み込む処理が書かれていると
