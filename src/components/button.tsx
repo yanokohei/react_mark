@@ -20,3 +20,4 @@ interface Props {
 export const Button: React.FC<Props> = (props) => (
   <StyledButton onClick={props.onClick}>{props.children}</StyledButton>
 );
+// childrenはボタン内に表示するテキストで、"登録する"というテキストが渡ってきています。
