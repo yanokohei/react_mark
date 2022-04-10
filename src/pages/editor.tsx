@@ -2,19 +2,30 @@ import * as React from "react";
 import styled from "styled-components";
 import { useStateWithStorage } from "../hooks/use_state_with_storage";
 import * as ReactMarkdown from "react-markdown";
+import { putMemo } from "../indexeddb/memos";
+import { Button } from "../components/button";
 
 const { useState } = React;
 const StorageKey = "pages/editor:text"; // データの参照・保存に使うキー名を任意の名前で定義しています。
 // https://i.gyazo.com/a854a783ca0198fbf0c8744e115a6dec.png
 const Header = styled.header`
+  align-content: center;
+  display: flex;
   font-size: 1.5rem;
   height: 2rem;
+  justify-content: space-between;
   left: 0;
   line-height: 2rem;
   padding: 0.5rem 1rem;
   position: fixed;
   right: 0;
   top: 0;
+`;
+
+const HeaderControl = styled.div`
+  height: 2rem;
+  display: flex;
+  align-content: center;
 `;
 
 const Wrapper = styled.div`
@@ -52,9 +63,17 @@ export const Editor: React.FC = () => {
   // React.FC は 関数コンポーネント（Function Component）の略
   // Reactのコンポーネントを返すという型アノテーション
   const [text, setText] = useStateWithStorage("", StorageKey);
+  const saveMemo = (): void => {
+    putMemo("TITLE", text);
+  }; // ボタンコンポーネントをクリックした際に発火し、putMemo関数に"TITLE"というデフォルト値とブラウザ上のtextを渡して実行します。
   return (
     <>
-      <Header>Markdown Editor</Header>
+      <Header>
+        Markdown Editor
+        <HeaderControl>
+          <Button onClick={saveMemo}>保存する</Button>
+        </HeaderControl>
+      </Header>
       <Wrapper>
         <TextArea
           onChange={(event) => {
