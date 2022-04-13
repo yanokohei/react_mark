@@ -4,6 +4,7 @@ import { useStateWithStorage } from "../hooks/use_state_with_storage";
 import * as ReactMarkdown from "react-markdown";
 import { putMemo } from "../indexeddb/memos";
 import { Button } from "../components/button";
+import { SaveModal } from "../components/save_modal";
 
 const { useState } = React;
 const StorageKey = "pages/editor:text"; // データの参照・保存に使うキー名を任意の名前で定義しています。
@@ -62,16 +63,17 @@ const Preview = styled.div`
 export const Editor: React.FC = () => {
   // React.FC は 関数コンポーネント（Function Component）の略
   // Reactのコンポーネントを返すという型アノテーション
+
+  // モーダルを表示するかどうかのフラグを管理で、初期値はfalseとします。
+  const [showModal, setShowModal] = useState(false);
   const [text, setText] = useStateWithStorage("", StorageKey);
-  const saveMemo = (): void => {
-    putMemo("TITLE", text);
-  }; // ボタンコンポーネントをクリックした際に発火し、putMemo関数に"TITLE"というデフォルト値とブラウザ上のtextを渡して実行します。
+
   return (
     <>
       <Header>
         Markdown Editor
         <HeaderControl>
-          <Button onClick={saveMemo}>保存する</Button>
+          <Button onClick={() => setShowModal(true)}>保存する</Button>
         </HeaderControl>
       </Header>
       <Wrapper>
@@ -85,9 +87,21 @@ export const Editor: React.FC = () => {
           <ReactMarkdown>{text}</ReactMarkdown>
         </Preview>
       </Wrapper>
+      {showModal && (
+        <SaveModal
+          onSave={(title: string): void => {
+            putMemo(title, text);
+            setShowModal(false);
+          }}
+          onCancel={() => setShowModal(false)}
+        />
+      )}
     </>
   );
 };
 // pageであるEditorを定義します。関数コンポーネントの型アノテーションをつけます。
 // 関数のブロック内にreturnと()、その中に<>という描画されない空タグを書きます。<React.Fragment>の短縮記法です。
 // <>を使うとDOMに余分なノードを追加することなく子要素をまとめることができるようになります。
+
+// 保存するボタンを押した際にsetShowModalで状態が更新され、setShowModalがtrueになることでSaveModalコンポーネントが発火します。
+//
