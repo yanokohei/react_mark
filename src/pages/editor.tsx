@@ -5,6 +5,7 @@ import * as ReactMarkdown from "react-markdown";
 import { putMemo } from "../indexeddb/memos";
 import { Button } from "../components/button";
 import { SaveModal } from "../components/save_modal";
+import { Link } from "react-router-dom"; // aタグと似た要素です。
 
 const { useState } = React;
 const StorageKey = "pages/editor:text"; // データの参照・保存に使うキー名を任意の名前で定義しています。
@@ -74,6 +75,7 @@ export const Editor: React.FC = () => {
         Markdown Editor
         <HeaderControl>
           <Button onClick={() => setShowModal(true)}>保存する</Button>
+          <Link to="/history">履歴を見る</Link>
         </HeaderControl>
       </Header>
       <Wrapper>
