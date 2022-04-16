@@ -17,3 +17,11 @@ export const putMemo = async (title: string, text: string): Promise<void> => {
   await memos.put({ datetime, title, text }); // タイトルとテキスト引数に受け取って、テーブルにオブジェクトを追加する
 }; // Table.putは、オブジェクトストア内の新しいオブジェクトを追加するか、既存のオブジェクトを置き換えます。
 // https://dexie.org/docs 公式みたらよき
+
+// 保存したテキストの履歴リストを取得するメソッド
+export const getMemos = (): Promise<MemoRecord[]> => {
+  return memos.orderBy("datetime").reverse().toArray();
+};
+// MemoRecord(日時、タイトルとテキスト)の配列を返すメソッドです。
+// Table.orderBy(主キーorインデックス)でdatetime（保存した日時）の昇順（古い順）で取得しコレクションを返します。
+// reverse()で並び順を逆にし、新しい順に並べ替えた上で、toArrayで配列に変換して返します。
