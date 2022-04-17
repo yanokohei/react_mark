@@ -11,6 +11,10 @@ import { Header } from "../components/header";
 const { useState } = React;
 const StorageKey = "pages/editor:text"; // データの参照・保存に使うキー名を任意の名前で定義しています。
 // https://i.gyazo.com/a854a783ca0198fbf0c8744e115a6dec.png
+interface Props {
+  text: string;
+  setText: (text: string) => void;
+}
 
 const Wrapper = styled.div`
   bottom: 0;
@@ -50,13 +54,11 @@ const Preview = styled.div`
   width: 50vw;
 `;
 // Editorコンポーネントを以下のように定義するとJSXで<Editor> という形式で呼び出すことができる。
-export const Editor: React.FC = () => {
-  // React.FC は 関数コンポーネント（Function Component）の略
-  // Reactのコンポーネントを返すという型アノテーション
-
+export const Editor: React.FC<Props> = (props) => {
+  // const [text, setText] = useStateWithStorage("", StorageKey);
+  const { text, setText } = props;
   // モーダルを表示するかどうかのフラグを管理で、初期値はfalseとします。
   const [showModal, setShowModal] = useState(false);
-  const [text, setText] = useStateWithStorage("", StorageKey);
 
   return (
     <>
