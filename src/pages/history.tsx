@@ -47,11 +47,16 @@ const MemoText = styled.div`
   white-space: nowrap;
 `;
 
-export const History: React.FC = () => {
-  // レンダリング関数内で呼び出して戻り値であるhistoryオブジェクトを処理内で使用します。
+interface Props {
+  setText: (text: string) => void;
+}
+// テキストの状態を更新する関数を、パラメーターとして受け取るようにします。
 
+export const History: React.FC<Props> = (props) => {
+  const { setText } = props;
   const [memos, setMemos] = useState<MemoRecord[]>([]);
   // console.log(memos);
+  const history = useHistory();
 
   useEffect(() => {
     getMemos().then(setMemos);
@@ -69,7 +74,13 @@ export const History: React.FC = () => {
       </HeaderArea>
       <Wrapper>
         {memos.map((memo) => (
-          <Memo key={memo.datetime}>
+          <Memo
+            key={memo.datetime}
+            onClick={() => {
+              setText(memo.text);
+              history.push("/editor");
+            }}
+          >
             <MemoTitle>{memo.title}</MemoTitle>
             <MemoText>{memo.text}</MemoText>
           </Memo>
