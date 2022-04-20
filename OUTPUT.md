@@ -178,3 +178,35 @@ module.exports = {
 
 webpack がビルドを始める際の開始点となるエントリーポイントの設定です。
 この設定のエントリーポイントがどのモジュールやライブラリに依存しているのかを判断し、処理して bundle と呼ばれるファイルに出力します。
+
+#### output
+
+bundle ファイルを webpack がどこにどのような名前で出力すればいいのかを指定できます。
+dist ディレクトリに index.js という名前で出力する場合は以下のようにします。
+
+````typescript
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "index.js",
+    ```
+````
+
+#### Loaders
+
+webpack 自身は JavaScript しか理解できませんが、Loader を使うことによって JavaScript 以外のものも処理できるようになります。
+どのような種類のファイルであっても webpack が処理できるモジュールに Loader が変換してくれることで、webpack が bundle ファイルを作れるようになります。(モジュール化が webpack の根本的な仕組みです)
+
+```typescript
+  module: {
+    rules: [
+      {
+        // .ts で終わるファイルに対して、ts-loader を実行する
+        test: /\.tsx?$/, // x? =「x の有無は任意」という正規表現。つまり .ts .tsx のどちらも適用される
+        use: "ts-loader",
+        exclude: /node_modules/, // exclude（含まない）は除外するファイルを正規表現で指定
+      },
+    ],
+  },
+```
+
+#### Plugins
