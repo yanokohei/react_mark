@@ -129,3 +129,52 @@ React は状態が更新されると再描画して仮想 DOM を作り、前回
 ##### React と相性が良い
 
 - コンポーネントのデータの受け渡しの際に**型を宣言**しておくと、**どんなデータが受け渡しされるのかわかりやすい**
+
+# ライブラリ周り
+
+## ts-loader
+
+webpack でビルドする際に TypeScript のビルドも同時に行うためのものです。
+
+コンパイルとは・・・"ソースコードをコンピュータが認識できるオブジェクトコードに変換すること"です。
+ビルドとは・・・"コンパイルしたファイルを一つにまとめ、実際に実行まですること"です。
+
+## webpack.config.js
+
+webpack.config.js は webpack の設定ファイルです。
+mode や Loader など、webpack の様々な設定を行うことが可能です。
+
+```typescript
+module.exports = {
+  entry: "./src/index.tsx",
+  module: {
+    rules: [
+      {
+        // .ts で終わるファイルに対して、ts-loader を実行する
+        test: /\.tsx?$/, // x? =「x の有無は任意」という正規表現。つまり .ts .tsx のどちらも適用される
+        use: "ts-loader",
+        exclude: /node_modules/, // exclude（含まない）は除外するファイルを正規表現で指定
+      },
+    ],
+  },
+  resolve: {
+    //外部ファイルやライブラリ（node_modules 以下のファイル）を使うファイルの拡張子なので .tsx と .js の両方を指定します。
+    extensions: [".js", ".ts", ".tsx"], // resolve セクションは、モジュールとして解決するファイルの拡張子を指定します。
+  },
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "index.js",
+    publicPath: "dist/",
+  },
+  devServer: {
+    publicPath: "/dist/", // ビルドしたファイルにアクセスするためのパス
+    hot: true, // ファイルを変更すると自動的にブラウザに反映させるフラグ
+    open: true, // 起動時にブラウザで開くフラグ (Google Chrome以外の場合は不要)
+  },
+};
+```
+
+#### Entry
+
+webpack がビルドを始める際の開始点となるエントリーポイントの設定です。
+この設定のエントリーポイントがどのモジュールやライブラリに依存しているのかを判断し、処理して bundle と呼ばれるファイルに出力します。
