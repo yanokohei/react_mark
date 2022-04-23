@@ -18,6 +18,14 @@ export const putMemo = async (title: string, text: string): Promise<void> => {
 }; // Table.putは、オブジェクトストア内の新しいオブジェクトを追加するか、既存のオブジェクトを置き換えます。
 // https://dexie.org/docs 公式みたらよき
 
+const NUM_PER_PAGE: number = 10;
+// 総ページ数(Promiseの数値)を返す関数
+export const getMemoPageCount = async (): Promise<number> => {
+  const totalCount = await memos.count();
+  const pageCount = Math.ceil(totalCount / NUM_PER_PAGE); // レコード数をページ数10で割ってceilで小数点を切り上げます。
+  return pageCount > 0 ? pageCount : 1;
+};
+
 // 保存したテキストの履歴リストを取得するメソッド
 export const getMemos = (): Promise<MemoRecord[]> => {
   return memos.orderBy("datetime").reverse().toArray();
