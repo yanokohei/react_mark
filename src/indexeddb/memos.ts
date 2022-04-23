@@ -27,8 +27,15 @@ export const getMemoPageCount = async (): Promise<number> => {
 };
 
 // 保存したテキストの履歴リストを取得するメソッド
-export const getMemos = (): Promise<MemoRecord[]> => {
-  return memos.orderBy("datetime").reverse().toArray();
+// 引数に数値を渡してoffsetを定義することでページ毎の一覧表示する
+export const getMemos = (page: number): Promise<MemoRecord[]> => {
+  const offset = (page - 1) * NUM_PER_PAGE;
+  return memos
+    .orderBy("datetime")
+    .reverse()
+    .offset(offset)
+    .limit(NUM_PER_PAGE)
+    .toArray();
 };
 // MemoRecord(日時、タイトルとテキスト)の配列を返すメソッドです。
 // Table.orderBy(主キーorインデックス)でdatetime（保存した日時）の昇順（古い順）で取得しコレクションを返します。
