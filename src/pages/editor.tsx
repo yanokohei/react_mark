@@ -1,16 +1,14 @@
 import * as React from "react";
 import styled from "styled-components";
-import { useStateWithStorage } from "../hooks/use_state_with_storage";
-import * as ReactMarkdown from "react-markdown";
 import { putMemo } from "../indexeddb/memos";
 import { Button } from "../components/button";
 import { SaveModal } from "../components/save_modal";
 import { Link } from "react-router-dom"; // aタグと似た要素です。
 import { Header } from "../components/header";
-import TestWorker from "worker-loader!../worker/convert_markdown_worker";
+import ConvertMarkdownWorker from "worker-loader!../worker/convert_markdown_worker";
 
 const { useState, useEffect } = React;
-const testWorker = new TestWorker();
+const convertMarkdownWorker = new ConvertMarkdownWorker();
 const StorageKey = "pages/editor:text"; // データの参照・保存に使うキー名を任意の名前で定義しています。
 // https://i.gyazo.com/a854a783ca0198fbf0c8744e115a6dec.png
 interface Props {
@@ -61,16 +59,19 @@ export const Editor: React.FC<Props> = (props) => {
   const { text, setText } = props;
   // モーダルを表示するかどうかのフラグを管理で、初期値はfalseとします。
   const [showModal, setShowModal] = useState(false);
+  const [html, setHtml] = useState("");
 
   useEffect(() => {
-    testWorker.onmessage = (event) => {
-      console.log("Main thread Received:", event.data); // Workerからデータを受け取った際のonmessage処理
+    convertMarkdownWorker.onmessage = (event) => {
+      // Workerからデータを受け取った際のonmessage処理
+      // console.log(event); // messageEventオブジェクトのdataプロパティにhtmlデータがあることを確認
+      setHtml(event.data.html); // 受け取ったHTMLをuseStateで更新します。
     };
   }, []);
 
   useEffect(() => {
     // テキストの変更時にのみ Worker へテキストデータを送信します。
-    testWorker.postMessage(text);
+    convertMarkdownWorker.postMessage(text);
   }, [text]);
 
   return (
@@ -89,7 +90,8 @@ export const Editor: React.FC<Props> = (props) => {
           value={text} // useStateで管理している変数を渡します。これがないとリロードでブラウザ上の入力が消えてしまう
         />
         <Preview>
-          <ReactMarkdown>{text}</ReactMarkdown>
+          <div dangerouslySetInnerHTML={{ __html: html }} />
+          {/* HTML をそのまま表示するのは、 XSS などの攻撃にさらされてしまうため危険です。__ 通常は使わないようにという意味合い */}
         </Preview>
       </Wrapper>
       {showModal && (

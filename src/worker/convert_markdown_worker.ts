@@ -5,7 +5,7 @@ const worker: Worker = self as any; // selfというグローバル変数を代�
 worker.addEventListener("message", (event) => {
   const text = event.data;
   const html = marked(text);
-  worker.postMessage({ html });
+  worker.postMessage({ html }); // なぜオブジェクトリテラルで囲む必要があるか
   // メインスレッドから受け取ったのテキストデータ（MD）を marked で HTML に変換し、メインスレッドに結果の HTML を返却しています。
   // postMessageでメインスレッドに結果のHTMLを返却しています。
 });
