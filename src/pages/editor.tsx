@@ -7,8 +7,10 @@ import { Button } from "../components/button";
 import { SaveModal } from "../components/save_modal";
 import { Link } from "react-router-dom"; // aタグと似た要素です。
 import { Header } from "../components/header";
+import TestWorker from "worker-loader!../worker/test.ts";
 
-const { useState } = React;
+const { useState, useEffect } = React;
+const testWorker = new TestWorker();
 const StorageKey = "pages/editor:text"; // データの参照・保存に使うキー名を任意の名前で定義しています。
 // https://i.gyazo.com/a854a783ca0198fbf0c8744e115a6dec.png
 interface Props {
@@ -59,6 +61,17 @@ export const Editor: React.FC<Props> = (props) => {
   const { text, setText } = props;
   // モーダルを表示するかどうかのフラグを管理で、初期値はfalseとします。
   const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    testWorker.onmessage = (event) => {
+      console.log("Main thread Received:", event.data); // Workerからデータを受け取った際のonmessage処理
+    };
+  }, []);
+
+  useEffect(() => {
+    // テキストの変更時にのみ Worker へテキストデータを送信します。
+    testWorker.postMessage(text);
+  }, [text]);
 
   return (
     <>
