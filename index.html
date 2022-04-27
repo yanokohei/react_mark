@@ -7,5 +7,27 @@
   <body>
     <div id="app"></div>
     <script src="./dist/index.js"></script>
+    <script type="text/javascript">
+      // サービスワーカーを登録する処理
+      if ("serviceWorker" in navigator) {
+        // in演算子でnavigatorオブジェクトにserviseWorkerプロパティがあるか真偽値を返す。
+        // ブラウザにサービスワーカーが実装されているかをチェックし、ページのロードが完了した時にコールバック関数を実行 https://developer.mozilla.org/ja/docs/Web/API/Navigator/serviceWorker
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./sw.js").then(
+            // registerにサービスワーカーのパスを渡します。ServiceWorkerRegistrationを作成するメソッドです。
+            (registration) => {
+              // サービスワーカーの登録が成功した場合、サービスワーカーのスコープを呼び出し、失敗時はエラーを出力します。
+              console.log(
+                "ServiceWorker registration successful with scope: ",
+                registration.scope // ServiceWorkerRegistrationオブジェクトのscopeプロパティの値であるオリジンURLが呼び出されています。
+              );
+            },
+            (err) => {
+              console.log("ServiceWorker registration failed: ", err);
+            }
+          );
+        });
+      }
+    </script>
   </body>
 </html>
